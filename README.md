@@ -12,12 +12,13 @@ Permite:
   - Creación de plantillas de Whatsapp
   - Consulta de plantillas de Whatsapp 
 
-  - Envío de mensaje de whatsapp con template de prueba
+  - Envío de mensajes con plantillas personalizadas
+  - Envío de mensajes de texto abierto (Sólo funciona cuando el paciente escribe primero o ha respondido a un mensaje de plantilla). Para enviar un mensaje personalizado, no debe enviarse el atributo template o se envirá el mensaje del template enviado.
 
 Pronto:
-  - Envío de mensajes con plantillas personalizadas
-  - Envío de mensajes de texto abierto
   - Creación de plantillas con bonones de acción
+
+  - Creación de flujos de mensajes
 
   - Separar template de util/message ya que hace muchas cosas, para darle una única responsabilidad 
 

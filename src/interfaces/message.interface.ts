@@ -1,7 +1,9 @@
 export interface Message {
     from: string,
     to: string,
-    message: string,
+    messageType: string,
     template: string,
-    params: object
+    language: string,
+    params: object,
+    text: string
 }

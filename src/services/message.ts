@@ -3,7 +3,7 @@ import { Whatsapp } from "../utils/whatsapp";
 import { Message } from "../interfaces/message.interface";
 
 const sendMessageService = async (body: Message) => {
-    const { to, template  } = body;
+    const { to, template, language, params, text } = body;
     //const template = body.template;
     
     if (!to) return "PHONE_NUMBER_REQUIRED";
@@ -14,12 +14,19 @@ const sendMessageService = async (body: Message) => {
     if (template){
         //Si llegó un template, se envía el mensaje con template de whatsapp
         what.setTemplate(template);
+        what.setMessageType("template");
+        what.setLanguage(language);
+        what.setParams(params);
+        
         const response = await what.sendTemplateMessage();
         //Si se envió, guardar en db
 
         return response;        
     }else{
         //Sino llega template se envía un mensaje personalizado
+        what.setMessageType("text");
+        what.setText(text);
+
         const response = await what.sendPersonalizedMessage();
         //Si se envió giardar en db
 

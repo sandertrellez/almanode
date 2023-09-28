@@ -1,6 +1,4 @@
-import { application, json } from "express";
 import "dotenv/config";
-
 
 class Whatsapp {
     /**
@@ -16,7 +14,9 @@ class Whatsapp {
      * Atributos de message
      */
     private to = '573195701440';
+    private messageType: string | undefined;
     private template: string | undefined;
+    private params: object | undefined;
 
     /**
      * Atributos de template
@@ -29,17 +29,22 @@ class Whatsapp {
     /**
      * Setters de message
      */
+    public setTo(to: string){
+        this.to = to;
+    }
+    public setMessageType(messageType: string){
+        this.messageType = messageType;
+    }
     public setTemplate(template: string){
         this.template = template;
     }
-    public setTo(to: string){
-        this.to = to;
+    public setParams(params: object){
+        this.params = params;
     }
 
     /**
      * Setters de template
      */
-
     
     public setName(name: string){
         this.name = name;
@@ -103,12 +108,17 @@ class Whatsapp {
         const data = {
             "messaging_product": "whatsapp",
             "to": this.to,
-            "type": "template",
+            "type": this.messageType,
             "template": { 
                 "name": this.template,
                 "language": {
-                    "code": "en_US"
-                }
+                    "code": this.language
+                },
+                "components": [
+                {
+                    "type": "body",
+                    "parameters": this.params
+                }]
             }
         };
         this.url += `${this.idNumber}/`;
@@ -120,19 +130,16 @@ class Whatsapp {
 
         const data = {
             "messaging_product": "whatsapp",
-            "to": "573195701440",
-            "type": "template",
-            "template": {
-              "name": "hello_world",
-              "language": {
-                "code": "en_US"
-              }
+            "to": this.to,
+            "type": this.messageType,
+            "text": {
+                "body": this.text
             }
         };
 
         this.url += `${this.idNumber}/`;
 
-        return this.sendRequest('message', 'POST',data);
+        return this.sendRequest('messages', 'POST',data);
     }
 
     /**
