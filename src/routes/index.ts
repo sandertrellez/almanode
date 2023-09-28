@@ -1,4 +1,4 @@
-import { Router, request, response } from "express";
+import { Router} from "express";
 
 //libreria de fileSystem
 import {readdirSync} from "fs";
@@ -7,17 +7,22 @@ import {readdirSync} from "fs";
 const PATH_ROUTER = `${__dirname}`;
 const router = Router();
 
-//Se quita la extension a los archvos relidos .ts, .js etc
+/**
+ * Se quita la extensión a los archivos leidos .ts, .js etc
+ * @param filename: string
+ * @returns string
+ */
 const cleanFileName = (filename:string) => {
     const file = filename.split('.').shift();
     return file;
 }
 
-//Se lee y se recorre los archivos en el Path actual
+//Se lee el path actual y se recorren los archivos
 readdirSync(PATH_ROUTER).filter((filename) => {
+
     const cleanName = cleanFileName(filename);
     if (cleanName !== "index"){
-        //Se importan los archivos leidos y posteriormente se usan en el router
+        //Se importan los archivos leidos y posteriormente se agregan al router
         import(`./${cleanName}`).then((moduleRoute) =>{
             router.use(`/${cleanName}`, moduleRoute.router)
         })
