@@ -8,8 +8,9 @@ class Whatsapp {
      */
     private version = 'v17.0';
     private token = process.env.WHATSAPP_TOKEN;
-    private idAccount = process.env.WHATSAPP_IDACCOUNT;
-    private url = `https://graph.facebook.com/${this.version}/${this.idAccount}/`;
+    private idAccount = process.env.WHATSAPP_ID_ACCOUNT;
+    private idNumber = process.env.WHATSAPP_ID_NUMBER
+    private url = `https://graph.facebook.com/${this.version}/`;
 
     /**
      * Atributos de message
@@ -62,7 +63,7 @@ class Whatsapp {
     /**
      * Método para crear los templates para envío de mensajes
      * @param name string Name of the template 
-     * @param language string es_LA es_ES en_US
+     * @param language string es es_LA es_ES en_US
      */
     public createTemplate() {
         const component = [
@@ -84,7 +85,7 @@ class Whatsapp {
             "language": this.language,
             "components": component
         };
-
+        this.url += `${this.idAccount}/`;
         return this.sendRequest('message_templates', 'POST', body);
     }
 
@@ -92,6 +93,7 @@ class Whatsapp {
      * getTemplates
      */
     public getTemplates() {
+        this.url += `${this.idAccount}/`;
 
         return this.sendRequest('message_templates?fields=name,status&limit=3', 'GET');
     }
@@ -109,8 +111,9 @@ class Whatsapp {
                 }
             }
         };
+        this.url += `${this.idNumber}/`;
 
-        return this.sendRequest('messages','GET', data);
+        return this.sendRequest('messages','POST', data);
     }
 
     public sendPersonalizedMessage() {    
@@ -125,9 +128,11 @@ class Whatsapp {
                 "code": "en_US"
               }
             }
-          };
+        };
 
-        return this.sendRequest('message', 'GET',data);
+        this.url += `${this.idNumber}/`;
+
+        return this.sendRequest('message', 'POST',data);
     }
 
     /**

@@ -7,7 +7,8 @@ const router = Router();
 /**
  * https://localhost:3002/auth/register [POST]
  */
-router.post("/register", checkJwt, registerController);
+router.post("/register", registerController);
+//router.post("/register", checkJwt, registerController);
 router.post("/login", loginController);
 
 export { router }
