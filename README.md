@@ -19,4 +19,6 @@ Pronto:
   - Envío de mensajes de texto abierto
   - Creación de plantillas con bonones de acción
 
+  - Separar template de util/message ya que hace muchas cosas, para darle una única responsabilidad 
+
 En la ruta src\routes\auth.ts una vez se cree el primer usuario, habilitar el middleware checkJwt para que pida token para registrar nuevos usuarios
