@@ -1,19 +1,29 @@
-import { Model, Schema } from "mongoose";
+import { Schema, model } from "mongoose";
 import { Message } from "../interfaces/message.interface";
 
 const MessageSchema = new Schema<Message>(
     {
         from: {
             type: String,
-            required: true        
         },
         to: {
             type: String,
             required: true
         },
-        message: {
+        text: {
             type: String,
-            required: true
+        },
+        messageType: {
+            type: String,
+        },
+        template: {
+            type: String,
+        },
+        language: {
+            type: String,
+        },
+        params: {
+            type: Object,
         }
     },
     {
@@ -22,6 +32,6 @@ const MessageSchema = new Schema<Message>(
     }
 )
 
-const MessageModel = new Model("messages", MessageSchema);
+const messageModel = model("messages", MessageSchema);
 
-export default MessageModel;
+export default messageModel;

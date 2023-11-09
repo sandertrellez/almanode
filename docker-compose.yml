@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "${PORT}:3002"
+    environment:
+      PORT: ${PORT}
+      MONGODB_URI: ${DB_URI}
+      JWT_SECRET: ${JWT_SECRET}
+      WHATSAPP_TOKEN: ${WHATSAPP_TOKEN}
+      WHATSAPP_ID_NUMBER: ${WHATSAPP_ID_NUMBER}
+      WHATSAPP_ID_ACCOUNT: ${WHATSAPP_ID_ACCOUNT}
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo:7.0.1
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:

@@ -6,14 +6,14 @@ class Whatsapp {
      */
     private version = 'v17.0';
     private token = process.env.WHATSAPP_TOKEN;
-    private idAccount = process.env.WHATSAPP_ID_ACCOUNT;
-    private idNumber = process.env.WHATSAPP_ID_NUMBER
+    private idAccount = process.env.WHATSAPP_ID_ACCOUNT;//Se usa para peticion de pantillas
+    private idNumber = process.env.WHATSAPP_ID_NUMBER;//Se usa para petición de mensajes
     private url = `https://graph.facebook.com/${this.version}/`;
 
     /**
      * Atributos de message
      */
-    private to = '573195701440';
+    private to: string | undefined;
     private messageType: string | undefined;
     private template: string | undefined;
     private params: object | undefined;
@@ -73,15 +73,25 @@ class Whatsapp {
     public createTemplate() {
         const component = [
             {
-              "type": "BODY",
-              "text": this.text,
-              "example": {
-                "body_text": [
-                  this.example
+                "type": "BODY",
+                "text": this.text,
+                "example": {
+                    "body_text": [
+                        this.example
+                    ]
+                }
+            },
+            {
+                "type": "buttons",
+                "buttons": [
+                    {
+                        "type": "PHONE_NUMBER",
+                        "text": "Boton1",
+                        "phone_number": "15550051310"
+                    }
                 ]
-              }
             }
-          ];
+        ];
 
         const body = {
             "name": this.name,
@@ -163,9 +173,8 @@ class Whatsapp {
             body: JSON.stringify(data)
         };
 
-        console.log(this.url);
         const res = await fetch(this.url, request)
-        .then(response => response.text())
+        .then(response => response.json())
         .then(result => {
             return result;
         })

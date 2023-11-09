@@ -1,6 +1,7 @@
 import { Request, response } from "express";
 import { Whatsapp } from "../utils/whatsapp";
 import { Message } from "../interfaces/message.interface";
+import messageModel from "../models/message";
 
 const sendMessageService = async (body: Message) => {
     const { to, template, language, params, text } = body;
@@ -18,8 +19,13 @@ const sendMessageService = async (body: Message) => {
         what.setLanguage(language);
         what.setParams(params);
         
-        const response = await what.sendTemplateMessage();
+        const responseWhat = await what.sendTemplateMessage();
+
+        //Si hay error al enviat el mensaje se retorna el mensaje
+        if (responseWhat.error)  return responseWhat.error.message;
+
         //Si se envió, guardar en db
+        const response = await messageModel.create(body);
 
         return response;        
     }else{
@@ -27,11 +33,41 @@ const sendMessageService = async (body: Message) => {
         what.setMessageType("text");
         what.setText(text);
 
-        const response = await what.sendPersonalizedMessage();
+        const responseWhat = await what.sendPersonalizedMessage();
+        
+        //Si hay error al enviat el mensaje se retorna el mensaje
+        if (responseWhat.error)  return responseWhat.error.message;
+        
+        console.log(responseWhat);
         //Si se envió giardar en db
+
+        const response = await messageModel.create(body);
 
         return response;   
     }
 }
 
-export {sendMessageService };
+const getAllMessageService = async () => {
+  
+    //const response = await messageModel.find();
+    const response = await messageModel.aggregate([
+        {
+          $sort: { createdAt: -1 }, //Se ordenan los documentos por createdAt desc
+        },
+        {
+          $group: {
+            _id: "$to", //Se agrupa por el campo to
+            message: { $first: "$$ROOT" }, //Se obtiene el primer documento de cada grupo
+          },
+        },
+      ])
+    return response;
+}
+
+const getOneMessageService = async (to: String) => {
+  
+    const response = await messageModel.find({to: to});
+    return response;
+}
+
+export {sendMessageService, getAllMessageService, getOneMessageService };

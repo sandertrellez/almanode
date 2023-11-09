@@ -31,7 +31,8 @@ const loginUser = async (user: User) => {
 
     const token = await signToken(response);
     
-    const data = {token, user: response};
+    //const data = {token, user: response};
+    const data = {token, _id: response._id};
 
     return data;
 }
